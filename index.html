@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<style>
+@import url('https://fonts.googleapis.com/css?family=Roboto:300');
+
+* {
+	box-sizing: border-box;
+	font-family: 'Roboto', sans-serif;
+}
+
+
+table {
+	width: 100%;
+	font-size: 14px;
+	color: black;
+}
+
+thead {
+	background-color: gray;
+	color: white;
+}
+
+th,
+td {
+	border: 0;
+	border-bottom: 1px solid gray;
+	height: 50px;
+	border-right: 1px solid gray;
+	text-align: center;
+}
+
+a {
+	width: 100%;
+	height: 100%;
+	display: block;
+	text-align: center;
+	padding-top: 15px;
+	color: inherit;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+a:hover {
+	background-color: black;
+	color: white;
+}
+
+select {
+	width: 38%;
+	height: 100%;
+}
+
+textarea {
+	display: block;
+	margin: 0 auto;
+	width: 99%;
+	height: 100%;
+}
+</style>
+		<title>tv.ze.gs</title>
+	</head>
+	<body>
+		<table>
+			<thead>
+				<tr>
+					<th>Switch</th>
+					<td><a href="javascript:api('command','02-202111271132-47468800','turnOn');">On/Off</a></td>
+					<th>&nbsp;</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="ShortCut"><a href="javascript:api('custom','02-202111271132-47468800','regza');">REGZA</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','youtube');">YouTube</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','abema');">ABEMA</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','tver');">TVer</a></td>
+				</tr>
+				<tr>
+					<td id="Volume">Volume</td>
+					<td><a href="javascript:api('command','02-202111271132-47468800','volumeSub');">-</a></td>
+					<td>&nbsp;</td>
+					<td><a href="javascript:api('command','02-202111271132-47468800','volumeAdd');">+</a></td>
+				</tr>
+				<tr>
+					<td id="Channel">Channel</td>
+					<td><a href="javascript:api('command','02-202111271132-47468800','channelSub');">-</a></td>
+					<td>&nbsp;</td>
+					<td><a href="javascript:api('command','02-202111271132-47468800','channelAdd');">+</a></td>
+				</tr>
+				<tr>
+					<td id="ChannelTop">&nbsp;</td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','1');">1</a></td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','2');">2</a></td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','3');">3</a></td>
+				</tr>
+				<tr>
+					<td id="ChannelMiddle">&nbsp;</td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','4');">4</a></td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','5');">5</a></td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','6');">6</a></td>
+				</tr>
+				<tr>
+					<td id="ChannelButtom">&nbsp;</td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','7');">7</a></td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','8');">8</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','menu');">M</a></td>
+				</tr>
+				<tr>
+					<td id="ChannelTop">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','up');">↑</a></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td id="ChannelMiddle">&nbsp;</td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','left');">←</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','ok');">OK</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','right');">→</a></td>
+				</tr>
+				<tr>
+					<td id="ChannelButtom">&nbsp;</td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','back');">B</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','down');">↓</a></td>
+					<td>&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+		<script>
+const api = (type, deviceId, command) => {
+	return fetch(`http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}`)
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.text();
+		})
+		.then((data) => {
+			console.log('Success:', data);
+			return data;
+		})
+		.catch((error) => {
+			console.error('There has been a problem with your fetch operation:', error);
+			throw error;
+		});
+};
+
+if (typeof window !== 'undefined') {
+	window.api = api;
+}
+
+if (typeof module !== 'undefined') {
+	module.exports = { api };
+}
+</script>
+	</body>
+</html>
