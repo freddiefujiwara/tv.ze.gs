@@ -79,7 +79,7 @@ describe('init', () => {
 		const event = new MouseEvent('click', { bubbles: true, cancelable: true });
 		const preventDefaultSpy = jest.spyOn(event, 'preventDefault');
 		link.dispatchEvent(event);
-		await new Promise((resolve) => setImmediate(resolve));
+		await Promise.resolve();
 
 		expect(preventDefaultSpy).toHaveBeenCalled();
 		expect(fetch).toHaveBeenCalledWith(
