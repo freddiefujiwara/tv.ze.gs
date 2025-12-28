@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="./styles.css">
+		<title>tv.ze.gs</title>
+	</head>
+	<body>
+		<table>
+			<thead>
+				<tr>
+					<th>Switch</th>
+					<td><a href="javascript:api('command','02-202111271132-47468800','turnOn');">On/Off</a></td>
+					<th>&nbsp;</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="ShortCut"><a href="javascript:api('custom','02-202111271132-47468800','regza');">REGZA</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','youtube');">YouTube</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','abema');">ABEMA</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','tver');">TVer</a></td>
+				</tr>
+				<tr>
+					<td id="Volume">Volume</td>
+					<td><a href="javascript:api('command','02-202111271132-47468800','volumeSub');">-</a></td>
+					<td>&nbsp;</td>
+					<td><a href="javascript:api('command','02-202111271132-47468800','volumeAdd');">+</a></td>
+				</tr>
+				<tr>
+					<td id="Channel">Channel</td>
+					<td><a href="javascript:api('command','02-202111271132-47468800','channelSub');">-</a></td>
+					<td>&nbsp;</td>
+					<td><a href="javascript:api('command','02-202111271132-47468800','channelAdd');">+</a></td>
+				</tr>
+				<tr>
+					<td id="ChannelTop">&nbsp;</td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','1');">1</a></td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','2');">2</a></td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','3');">3</a></td>
+				</tr>
+				<tr>
+					<td id="ChannelMiddle">&nbsp;</td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','4');">4</a></td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','5');">5</a></td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','6');">6</a></td>
+				</tr>
+				<tr>
+					<td id="ChannelButtom">&nbsp;</td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','7');">7</a></td>
+					<td><a href="javascript:api('tv','02-202111271132-47468800','8');">8</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','menu');">M</a></td>
+				</tr>
+				<tr>
+					<td id="ChannelTop">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','up');">↑</a></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td id="ChannelMiddle">&nbsp;</td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','left');">←</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','ok');">OK</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','right');">→</a></td>
+				</tr>
+				<tr>
+					<td id="ChannelButtom">&nbsp;</td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','back');">B</a></td>
+					<td><a href="javascript:api('custom','02-202111271132-47468800','down');">↓</a></td>
+					<td>&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+		<script src="./app.js"></script>
+	</body>
+</html>
