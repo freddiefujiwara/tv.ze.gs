@@ -16,10 +16,26 @@ const api = (type, deviceId, command) => {
 		});
 };
 
+const init = (root = document) => {
+	if (!root?.querySelectorAll) {
+		return;
+	}
+
+	const links = root.querySelectorAll('a[data-type][data-device-id][data-command]');
+	links.forEach((link) => {
+		link.addEventListener('click', (event) => {
+			event.preventDefault();
+			const { type, deviceId, command } = event.currentTarget.dataset;
+			api(type, deviceId, command);
+		});
+	});
+};
+
 if (typeof window !== 'undefined') {
 	window.api = api;
+	window.addEventListener('DOMContentLoaded', () => init(window.document));
 }
 
 if (typeof module !== 'undefined') {
-	module.exports = { api };
+	module.exports = { api, init };
 }

@@ -1,4 +1,4 @@
-const { api } = require('../src/app');
+const { api, init } = require('../src/app');
 
 describe('api', () => {
 	beforeEach(() => {
@@ -50,5 +50,47 @@ describe('api', () => {
 			'There has been a problem with your fetch operation:',
 			error
 		);
+	});
+});
+
+describe('init', () => {
+	beforeEach(() => {
+		global.fetch = jest.fn().mockResolvedValue({
+			ok: true,
+			text: jest.fn().mockResolvedValue('ok'),
+		});
+		jest.spyOn(console, 'log').mockImplementation(() => {});
+		jest.spyOn(console, 'error').mockImplementation(() => {});
+	});
+
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	it('wires up click handlers to links with dataset attributes', async () => {
+		document.body.innerHTML = `
+			<a href="#" data-type="custom" data-device-id="device" data-command="menu">M</a>
+			<a href="#" data-type="tv" data-device-id="device" data-command="1">1</a>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('a[data-command="menu"]');
+		const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+		const preventDefaultSpy = jest.spyOn(event, 'preventDefault');
+		link.dispatchEvent(event);
+		await Promise.resolve();
+
+		expect(preventDefaultSpy).toHaveBeenCalled();
+		expect(fetch).toHaveBeenCalledWith(
+			'http://a.ze.gs/switchbot-custom/-d/device/-c/menu'
+		);
+		expect(console.log).toHaveBeenCalledWith('Success:', 'ok');
+	});
+
+	it('returns early when root is missing querySelectorAll', () => {
+		const root = {};
+		init(root);
+		expect(fetch).not.toHaveBeenCalled();
 	});
 });
