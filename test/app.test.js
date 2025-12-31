@@ -65,6 +65,7 @@ describe('init', () => {
 
 	afterEach(() => {
 		jest.restoreAllMocks();
+		jest.useRealTimers();
 	});
 
 	it('wires up click handlers to links with dataset attributes', async () => {
@@ -86,6 +87,29 @@ describe('init', () => {
 			'http://a.ze.gs/switchbot-custom/-d/device/-c/menu'
 		);
 		expect(console.log).toHaveBeenCalledWith('Success:', 'ok');
+	});
+
+	it('repeats requests while pointer is held down', () => {
+		jest.useFakeTimers();
+		document.body.innerHTML = `
+			<a href="#" data-type="custom" data-device-id="device" data-command="up">↑</a>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('a[data-command="up"]');
+		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+		const upEvent = new MouseEvent('pointerup', { bubbles: true, cancelable: true });
+
+		link.dispatchEvent(downEvent);
+		expect(fetch).toHaveBeenCalledTimes(1);
+
+		jest.advanceTimersByTime(450);
+		expect(fetch).toHaveBeenCalledTimes(3);
+
+		link.dispatchEvent(upEvent);
+		jest.advanceTimersByTime(400);
+		expect(fetch).toHaveBeenCalledTimes(3);
 	});
 
 	it('returns early when root is missing querySelectorAll', () => {
