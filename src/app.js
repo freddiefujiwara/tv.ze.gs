@@ -22,7 +22,7 @@ const init = (root = document) => {
 		return;
 	}
 
-	const links = root.querySelectorAll('a[data-type][data-device-id][data-command]');
+	const links = root.querySelectorAll('[data-type][data-device-id][data-command]');
 	const activeIntervals = new Map();
 	const suppressClick = new WeakSet();
 
