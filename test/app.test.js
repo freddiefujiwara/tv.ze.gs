@@ -177,14 +177,30 @@ describe('init', () => {
 		expect(fetch).toHaveBeenCalledTimes(4);
 	});
 
-	it('suppresses click right after pointer hold then allows later clicks', async () => {
+	it('does not repeat on non-arrow links', () => {
+		jest.useFakeTimers();
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="ok">OK</a>
+			<a href="#" data-type="custom" data-device-id="device" data-command="4">4</a>
 		`;
 
 		init(document);
 
-		const link = document.querySelector('a[data-command="ok"]');
+		const link = document.querySelector('a[data-command="4"]');
+		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+		link.dispatchEvent(downEvent);
+
+		jest.advanceTimersByTime(400);
+		expect(fetch).not.toHaveBeenCalled();
+	});
+
+	it('suppresses click right after pointer hold then allows later clicks', async () => {
+		document.body.innerHTML = `
+			<a href="#" data-type="custom" data-device-id="device" data-command="right">→</a>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('a[data-command="right"]');
 		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
 		const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
 
@@ -198,6 +214,24 @@ describe('init', () => {
 		await new Promise((resolve) => setTimeout(resolve, 0));
 
 		expect(fetch).toHaveBeenCalledTimes(2);
+	});
+
+	it('still allows click on non-arrow links after pointerdown', async () => {
+		document.body.innerHTML = `
+			<a href="#" data-type="custom" data-device-id="device" data-command="4">4</a>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('a[data-command="4"]');
+		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+		const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+		link.dispatchEvent(downEvent);
+		link.dispatchEvent(clickEvent);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+
+		expect(fetch).toHaveBeenCalledTimes(1);
 	});
 
 	it('returns early when root is missing querySelectorAll', () => {

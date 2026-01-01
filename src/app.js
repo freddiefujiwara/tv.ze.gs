@@ -17,6 +17,7 @@ const api = (type, deviceId, command) => {
 };
 
 const repeatIntervalMs = 200;
+const repeatableCommands = new Set(['up', 'down', 'left', 'right']);
 
 const init = (root = document) => {
 	if (!root?.querySelectorAll) {
@@ -32,6 +33,9 @@ const init = (root = document) => {
 			return;
 		}
 		const { type, deviceId, command } = link.dataset;
+		if (!repeatableCommands.has(command)) {
+			return;
+		}
 		api(type, deviceId, command);
 		suppressClick.add(link);
 		const intervalId = setInterval(() => {
