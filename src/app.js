@@ -21,7 +21,6 @@ const init = (root = document) => {
 	const start = (el) => {
 		if (timers.has(el)) return;
 		const { type, deviceId, command } = el.dataset;
-		if (!repeatableCommands[command]) return;
 		const send = () => api(type, deviceId, command);
 		send();
 		suppress.add(el);
@@ -33,11 +32,12 @@ const init = (root = document) => {
 		clearInterval(id);
 		timers.delete(el);
 	};
+	const startHandler = on(start);
+	const stopHandler = on(stop);
 	els.forEach((el) => {
 		const { command } = el.dataset;
-		const stopHandler = on(stop);
 		if (repeatableCommands[command]) {
-			el.addEventListener('pointerdown', on(start));
+			el.addEventListener('pointerdown', startHandler);
 			for (const name of ['pointerup', 'pointerleave', 'pointercancel']) {
 				el.addEventListener(name, stopHandler);
 			}
