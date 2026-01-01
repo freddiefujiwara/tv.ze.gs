@@ -49,6 +49,25 @@ a:hover {
 	color: white;
 }
 
+.control-link {
+	width: 100%;
+	height: 100%;
+	display: block;
+	text-align: center;
+	padding-top: 15px;
+	color: inherit;
+	text-decoration: none;
+	font-weight: bold;
+	background: none;
+	border: 0;
+	cursor: pointer;
+}
+
+.control-link:hover {
+	background-color: black;
+	color: white;
+}
+
 select {
 	width: 38%;
 	height: 100%;
@@ -113,19 +132,19 @@ textarea {
 				<tr>
 					<td id="ChannelTop">&nbsp;</td>
 					<td>&nbsp;</td>
-					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="up">↑</a></td>
+					<td><button type="button" class="control-link" data-type="custom" data-device-id="02-202111271132-47468800" data-command="up">↑</button></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td id="ChannelMiddle">&nbsp;</td>
-					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="left">←</a></td>
+					<td><button type="button" class="control-link" data-type="custom" data-device-id="02-202111271132-47468800" data-command="left">←</button></td>
 					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="ok">OK</a></td>
-					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="right">→</a></td>
+					<td><button type="button" class="control-link" data-type="custom" data-device-id="02-202111271132-47468800" data-command="right">→</button></td>
 				</tr>
 				<tr>
 					<td id="ChannelButtom">&nbsp;</td>
 					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="back">B</a></td>
-					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="down">↓</a></td>
+					<td><button type="button" class="control-link" data-type="custom" data-device-id="02-202111271132-47468800" data-command="down">↓</button></td>
 					<td>&nbsp;</td>
 				</tr>
 			</tbody>
@@ -155,7 +174,7 @@ const init = (root = document) => {
 		return;
 	}
 
-	const links = root.querySelectorAll('a[data-type][data-device-id][data-command]');
+	const links = root.querySelectorAll('[data-type][data-device-id][data-command]');
 	const activeIntervals = new Map();
 	const suppressClick = new WeakSet();
 
