@@ -33,23 +33,7 @@ td {
 	text-align: center;
 }
 
-a {
-	width: 100%;
-	height: 100%;
-	display: block;
-	text-align: center;
-	padding-top: 15px;
-	color: inherit;
-	text-decoration: none;
-	font-weight: bold;
-}
-
-a:hover {
-	background-color: black;
-	color: white;
-}
-
-.control-link {
+.control {
 	width: 100%;
 	height: 100%;
 	display: block;
@@ -66,7 +50,7 @@ a:hover {
 	user-select: none;
 }
 
-.control-link:hover {
+.control:hover {
 	background-color: black;
 	color: white;
 }
@@ -90,71 +74,74 @@ textarea {
 			<thead>
 				<tr>
 					<th>Switch</th>
-					<td><a href="#" data-type="command" data-device-id="02-202111271132-47468800" data-command="turnOn">On/Off</a></td>
+					<td><button type="button" class="control" data-type="command" data-device-id="02-202111271132-47468800" data-command="turnOn">On/Off</button></td>
 					<th>&nbsp;</th>
 					<th>&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td id="ShortCut"><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="regza">REGZA</a></td>
-					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="youtube">YouTube</a></td>
-					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="abema">ABEMA</a></td>
-					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="tver">TVer</a></td>
+					<td id="ShortCut"><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="regza">REGZA</button></td>
+					<td><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="youtube">YouTube</button></td>
+					<td><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="abema">ABEMA</button></td>
+					<td><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="tver">TVer</button></td>
 				</tr>
 				<tr>
 					<td id="Volume">Volume</td>
-					<td><a href="#" data-type="command" data-device-id="02-202111271132-47468800" data-command="volumeSub">-</a></td>
+					<td><button type="button" class="control" data-type="command" data-device-id="02-202111271132-47468800" data-command="volumeSub">-</button></td>
 					<td>&nbsp;</td>
-					<td><a href="#" data-type="command" data-device-id="02-202111271132-47468800" data-command="volumeAdd">+</a></td>
+					<td><button type="button" class="control" data-type="command" data-device-id="02-202111271132-47468800" data-command="volumeAdd">+</button></td>
 				</tr>
 				<tr>
 					<td id="Channel">Channel</td>
-					<td><a href="#" data-type="command" data-device-id="02-202111271132-47468800" data-command="channelSub">-</a></td>
+					<td><button type="button" class="control" data-type="command" data-device-id="02-202111271132-47468800" data-command="channelSub">-</button></td>
 					<td>&nbsp;</td>
-					<td><a href="#" data-type="command" data-device-id="02-202111271132-47468800" data-command="channelAdd">+</a></td>
+					<td><button type="button" class="control" data-type="command" data-device-id="02-202111271132-47468800" data-command="channelAdd">+</button></td>
 				</tr>
 				<tr>
 					<td id="ChannelTop">&nbsp;</td>
-					<td><a href="#" data-type="tv" data-device-id="02-202111271132-47468800" data-command="1">1</a></td>
-					<td><a href="#" data-type="tv" data-device-id="02-202111271132-47468800" data-command="2">2</a></td>
-					<td><a href="#" data-type="tv" data-device-id="02-202111271132-47468800" data-command="3">3</a></td>
+					<td><button type="button" class="control" data-type="tv" data-device-id="02-202111271132-47468800" data-command="1">1</button></td>
+					<td><button type="button" class="control" data-type="tv" data-device-id="02-202111271132-47468800" data-command="2">2</button></td>
+					<td><button type="button" class="control" data-type="tv" data-device-id="02-202111271132-47468800" data-command="3">3</button></td>
 				</tr>
 				<tr>
 					<td id="ChannelMiddle">&nbsp;</td>
-					<td><a href="#" data-type="tv" data-device-id="02-202111271132-47468800" data-command="4">4</a></td>
-					<td><a href="#" data-type="tv" data-device-id="02-202111271132-47468800" data-command="5">5</a></td>
-					<td><a href="#" data-type="tv" data-device-id="02-202111271132-47468800" data-command="6">6</a></td>
+					<td><button type="button" class="control" data-type="tv" data-device-id="02-202111271132-47468800" data-command="4">4</button></td>
+					<td><button type="button" class="control" data-type="tv" data-device-id="02-202111271132-47468800" data-command="5">5</button></td>
+					<td><button type="button" class="control" data-type="tv" data-device-id="02-202111271132-47468800" data-command="6">6</button></td>
 				</tr>
 				<tr>
 					<td id="ChannelButtom">&nbsp;</td>
-					<td><a href="#" data-type="tv" data-device-id="02-202111271132-47468800" data-command="7">7</a></td>
-					<td><a href="#" data-type="tv" data-device-id="02-202111271132-47468800" data-command="8">8</a></td>
-					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="menu">M</a></td>
+					<td><button type="button" class="control" data-type="tv" data-device-id="02-202111271132-47468800" data-command="7">7</button></td>
+					<td><button type="button" class="control" data-type="tv" data-device-id="02-202111271132-47468800" data-command="8">8</button></td>
+					<td><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="menu">M</button></td>
 				</tr>
 				<tr>
 					<td id="ChannelTop">&nbsp;</td>
 					<td>&nbsp;</td>
-					<td><button type="button" class="control-link" data-type="custom" data-device-id="02-202111271132-47468800" data-command="up">↑</button></td>
+					<td><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="up">↑</button></td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
 					<td id="ChannelMiddle">&nbsp;</td>
-					<td><button type="button" class="control-link" data-type="custom" data-device-id="02-202111271132-47468800" data-command="left">←</button></td>
-					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="ok">OK</a></td>
-					<td><button type="button" class="control-link" data-type="custom" data-device-id="02-202111271132-47468800" data-command="right">→</button></td>
+					<td><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="left">←</button></td>
+					<td><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="ok">OK</button></td>
+					<td><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="right">→</button></td>
 				</tr>
 				<tr>
 					<td id="ChannelButtom">&nbsp;</td>
-					<td><a href="#" data-type="custom" data-device-id="02-202111271132-47468800" data-command="back">B</a></td>
-					<td><button type="button" class="control-link" data-type="custom" data-device-id="02-202111271132-47468800" data-command="down">↓</button></td>
+					<td><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="back">B</button></td>
+					<td><button type="button" class="control" data-type="custom" data-device-id="02-202111271132-47468800" data-command="down">↓</button></td>
 					<td>&nbsp;</td>
 				</tr>
 			</tbody>
 		</table>
 		<script>
+const buildUrl = (type, deviceId, command) =>
+	`http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}`;
+
 const api = (type, deviceId, command) =>
-	fetch(`http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}`)
+	fetch(buildUrl(type, deviceId, command))
 		.then((response) => {
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
@@ -170,21 +157,26 @@ const api = (type, deviceId, command) =>
 			throw error;
 		});
 
-const repeatableCommands = { up: 1, down: 1, left: 1, right: 1 };
+const repeatableCommands = new Set(['up', 'down', 'left', 'right']);
+const isRepeatable = (command) => repeatableCommands.has(command);
 
 const init = (root = document) => {
 	if (!root?.querySelectorAll) {
 		return;
 	}
 
-	const links = root.querySelectorAll('[data-type][data-device-id][data-command]');
+	const links = root.querySelectorAll('.control[data-type][data-device-id][data-command]');
 	const activeIntervals = new Map();
 	const suppressClick = new WeakSet();
+	const withTarget = (handler) => (event) => {
+		event.preventDefault();
+		handler(event.currentTarget);
+	};
 
 	const startRepeat = (link) => {
 		if (activeIntervals.has(link)) return;
 		const { type, deviceId, command } = link.dataset;
-		if (!repeatableCommands[command]) return;
+		if (!isRepeatable(command)) return;
 		const send = () => api(type, deviceId, command);
 		send();
 		suppressClick.add(link);
@@ -199,10 +191,8 @@ const init = (root = document) => {
 	};
 
 	links.forEach((link) => {
-		const stopHandler = (event) => (event.preventDefault(), stopRepeat(event.currentTarget));
-		link.addEventListener('pointerdown', (event) =>
-			(event.preventDefault(), startRepeat(event.currentTarget))
-		);
+		const stopHandler = withTarget(stopRepeat);
+		link.addEventListener('pointerdown', withTarget(startRepeat));
 		for (const name of ['pointerup', 'pointerleave', 'pointercancel']) {
 			link.addEventListener(name, stopHandler);
 		}
