@@ -70,13 +70,13 @@ describe('init', () => {
 
 	it('wires up click handlers to links with dataset attributes', async () => {
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="menu">M</a>
-			<a href="#" data-type="tv" data-device-id="device" data-command="1">1</a>
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="menu">M</button>
+			<button type="button" class="control" data-type="tv" data-device-id="device" data-command="1">1</button>
 		`;
 
 		init(document);
 
-		const link = document.querySelector('a[data-command="menu"]');
+		const link = document.querySelector('.control[data-command="menu"]');
 		const event = new MouseEvent('click', { bubbles: true, cancelable: true });
 		const preventDefaultSpy = jest.spyOn(event, 'preventDefault');
 		link.dispatchEvent(event);
@@ -92,12 +92,12 @@ describe('init', () => {
 	it('repeats requests while pointer is held down', () => {
 		jest.useFakeTimers();
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="up">↑</a>
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="up">↑</button>
 		`;
 
 		init(document);
 
-		const link = document.querySelector('a[data-command="up"]');
+		const link = document.querySelector('.control[data-command="up"]');
 		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
 		const upEvent = new MouseEvent('pointerup', { bubbles: true, cancelable: true });
 
@@ -115,12 +115,12 @@ describe('init', () => {
 	it('does not start repeat twice for the same link', () => {
 		jest.useFakeTimers();
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="right">→</a>
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="right">→</button>
 		`;
 
 		init(document);
 
-		const link = document.querySelector('a[data-command="right"]');
+		const link = document.querySelector('.control[data-command="right"]');
 		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
 
 		link.dispatchEvent(downEvent);
@@ -134,12 +134,12 @@ describe('init', () => {
 
 	it('ignores stop events when no repeat is active', () => {
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="left">←</a>
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="left">←</button>
 		`;
 
 		init(document);
 
-		const link = document.querySelector('a[data-command="left"]');
+		const link = document.querySelector('.control[data-command="left"]');
 		const upEvent = new MouseEvent('pointerup', { bubbles: true, cancelable: true });
 
 		link.dispatchEvent(upEvent);
@@ -150,12 +150,12 @@ describe('init', () => {
 	it('stops repeating on pointerleave and pointercancel', () => {
 		jest.useFakeTimers();
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="down">↓</a>
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="down">↓</button>
 		`;
 
 		init(document);
 
-		const link = document.querySelector('a[data-command="down"]');
+		const link = document.querySelector('.control[data-command="down"]');
 		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
 		const leaveEvent = new MouseEvent('pointerleave', { bubbles: true, cancelable: true });
 
@@ -180,12 +180,12 @@ describe('init', () => {
 	it('does not repeat on non-arrow links', () => {
 		jest.useFakeTimers();
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="4">4</a>
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="4">4</button>
 		`;
 
 		init(document);
 
-		const link = document.querySelector('a[data-command="4"]');
+		const link = document.querySelector('.control[data-command="4"]');
 		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
 		link.dispatchEvent(downEvent);
 
@@ -195,12 +195,12 @@ describe('init', () => {
 
 	it('suppresses click right after pointer hold then allows later clicks', async () => {
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="right">→</a>
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="right">→</button>
 		`;
 
 		init(document);
 
-		const link = document.querySelector('a[data-command="right"]');
+		const link = document.querySelector('.control[data-command="right"]');
 		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
 		const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
 
@@ -218,12 +218,12 @@ describe('init', () => {
 
 	it('still allows click on non-arrow links after pointerdown', async () => {
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="4">4</a>
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="4">4</button>
 		`;
 
 		init(document);
 
-		const link = document.querySelector('a[data-command="4"]');
+		const link = document.querySelector('.control[data-command="4"]');
 		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
 		const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
 
@@ -242,12 +242,12 @@ describe('init', () => {
 
 	it('uses document by default when no root is provided', async () => {
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="menu">M</a>
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="menu">M</button>
 		`;
 
 		init();
 
-		const link = document.querySelector('a[data-command="menu"]');
+		const link = document.querySelector('.control[data-command="menu"]');
 		const event = new MouseEvent('click', { bubbles: true, cancelable: true });
 		link.dispatchEvent(event);
 		await new Promise((resolve) => setTimeout(resolve, 0));

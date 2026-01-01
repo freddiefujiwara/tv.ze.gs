@@ -1,5 +1,8 @@
+const buildUrl = (type, deviceId, command) =>
+	`http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}`;
+
 const api = (type, deviceId, command) =>
-	fetch(`http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}`)
+	fetch(buildUrl(type, deviceId, command))
 		.then((response) => {
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
@@ -15,21 +18,26 @@ const api = (type, deviceId, command) =>
 			throw error;
 		});
 
-const repeatableCommands = { up: 1, down: 1, left: 1, right: 1 };
+const repeatableCommands = new Set(['up', 'down', 'left', 'right']);
+const isRepeatable = (command) => repeatableCommands.has(command);
 
 const init = (root = document) => {
 	if (!root?.querySelectorAll) {
 		return;
 	}
 
-	const links = root.querySelectorAll('[data-type][data-device-id][data-command]');
+	const links = root.querySelectorAll('.control[data-type][data-device-id][data-command]');
 	const activeIntervals = new Map();
 	const suppressClick = new WeakSet();
+	const withTarget = (handler) => (event) => {
+		event.preventDefault();
+		handler(event.currentTarget);
+	};
 
 	const startRepeat = (link) => {
 		if (activeIntervals.has(link)) return;
 		const { type, deviceId, command } = link.dataset;
-		if (!repeatableCommands[command]) return;
+		if (!isRepeatable(command)) return;
 		const send = () => api(type, deviceId, command);
 		send();
 		suppressClick.add(link);
@@ -44,10 +52,8 @@ const init = (root = document) => {
 	};
 
 	links.forEach((link) => {
-		const stopHandler = (event) => (event.preventDefault(), stopRepeat(event.currentTarget));
-		link.addEventListener('pointerdown', (event) =>
-			(event.preventDefault(), startRepeat(event.currentTarget))
-		);
+		const stopHandler = withTarget(stopRepeat);
+		link.addEventListener('pointerdown', withTarget(startRepeat));
 		for (const name of ['pointerup', 'pointerleave', 'pointercancel']) {
 			link.addEventListener(name, stopHandler);
 		}
