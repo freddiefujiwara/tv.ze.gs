@@ -1,5 +1,5 @@
-const api = (type, deviceId, command) => {
-	return fetch(`http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}`)
+const api = (type, deviceId, command) =>
+	fetch(`http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}`)
 		.then((response) => {
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
@@ -14,7 +14,6 @@ const api = (type, deviceId, command) => {
 			console.error('There has been a problem with your fetch operation:', error);
 			throw error;
 		});
-};
 
 const repeatIntervalMs = 200;
 const repeatableCommands = new Set(['up', 'down', 'left', 'right']);
@@ -29,54 +28,42 @@ const init = (root = document) => {
 	const suppressClick = new WeakSet();
 
 	const startRepeat = (link) => {
-		if (activeIntervals.has(link)) {
-			return;
-		}
+		if (activeIntervals.has(link)) return;
 		const { type, deviceId, command } = link.dataset;
-		if (!repeatableCommands.has(command)) {
-			return;
-		}
-		api(type, deviceId, command);
+		if (!repeatableCommands.has(command)) return;
+		const send = () => api(type, deviceId, command);
+		send();
 		suppressClick.add(link);
-		const intervalId = setInterval(() => {
-			api(type, deviceId, command);
-		}, repeatIntervalMs);
-		activeIntervals.set(link, intervalId);
+		activeIntervals.set(link, setInterval(send, repeatIntervalMs));
 	};
 
 	const stopRepeat = (link) => {
 		const intervalId = activeIntervals.get(link);
-		if (!intervalId) {
-			return;
-		}
+		if (!intervalId) return;
 		clearInterval(intervalId);
 		activeIntervals.delete(link);
 	};
 
 	links.forEach((link) => {
+		const stopHandler = (event) => {
+			event.preventDefault();
+			stopRepeat(event.currentTarget);
+		};
 		link.addEventListener('pointerdown', (event) => {
 			event.preventDefault();
 			startRepeat(event.currentTarget);
 		});
-		link.addEventListener('pointerup', (event) => {
-			event.preventDefault();
-			stopRepeat(event.currentTarget);
-		});
-		link.addEventListener('pointerleave', (event) => {
-			event.preventDefault();
-			stopRepeat(event.currentTarget);
-		});
-		link.addEventListener('pointercancel', (event) => {
-			event.preventDefault();
-			stopRepeat(event.currentTarget);
+		['pointerup', 'pointerleave', 'pointercancel'].forEach((name) => {
+			link.addEventListener(name, stopHandler);
 		});
 		link.addEventListener('click', (event) => {
 			event.preventDefault();
-			if (suppressClick.has(event.currentTarget)) {
-				suppressClick.delete(event.currentTarget);
+			const currentTarget = event.currentTarget;
+			if (suppressClick.has(currentTarget)) {
+				suppressClick.delete(currentTarget);
 				return;
 			}
-			const { type, deviceId, command } = event.currentTarget.dataset;
+			const { type, deviceId, command } = currentTarget.dataset;
 			api(type, deviceId, command);
 		});
 	});
