@@ -1,31 +1,52 @@
-const api = (type, deviceId, command) => {
-	return fetch(`http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}`)
+const api = (type, deviceId, command) =>
+	fetch(`http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}`)
 		.then((response) => {
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
+			if (!response.ok) throw new Error('Network response was not ok');
 			return response.text();
 		})
-		.then((data) => {
-			console.log('Success:', data);
-			return data;
-		})
+		.then((data) => (console.log('Success:', data), data))
 		.catch((error) => {
 			console.error('There has been a problem with your fetch operation:', error);
 			throw error;
 		});
-};
+
+const repeatableCommands = { up: 1, down: 1, left: 1, right: 1 };
 
 const init = (root = document) => {
-	if (!root?.querySelectorAll) {
-		return;
-	}
-
-	const links = root.querySelectorAll('a[data-type][data-device-id][data-command]');
-	links.forEach((link) => {
-		link.addEventListener('click', (event) => {
-			event.preventDefault();
-			const { type, deviceId, command } = event.currentTarget.dataset;
+	if (!root?.querySelectorAll) return;
+	const els = root.querySelectorAll('.control[data-type][data-device-id][data-command]');
+	const timers = new Map();
+	const suppress = new WeakSet();
+	const on = (fn) => (e) => (e.preventDefault(), fn(e.currentTarget));
+	const start = (el) => {
+		if (timers.has(el)) return;
+		const { type, deviceId, command } = el.dataset;
+		const send = () => api(type, deviceId, command);
+		send();
+		suppress.add(el);
+		timers.set(el, setInterval(send, 200));
+	};
+	const stop = (el) => {
+		const id = timers.get(el);
+		if (!id) return;
+		clearInterval(id);
+		timers.delete(el);
+	};
+	const startHandler = on(start);
+	const stopHandler = on(stop);
+	els.forEach((el) => {
+		const { command } = el.dataset;
+		if (repeatableCommands[command]) {
+			el.addEventListener('pointerdown', startHandler);
+			for (const name of ['pointerup', 'pointerleave', 'pointercancel']) {
+				el.addEventListener(name, stopHandler);
+			}
+		}
+		el.addEventListener('click', (e) => {
+			e.preventDefault();
+			const t = e.currentTarget;
+			if (suppress.has(t)) return void suppress.delete(t);
+			const { type, deviceId, command } = t.dataset;
 			api(type, deviceId, command);
 		});
 	});

@@ -65,17 +65,18 @@ describe('init', () => {
 
 	afterEach(() => {
 		jest.restoreAllMocks();
+		jest.useRealTimers();
 	});
 
 	it('wires up click handlers to links with dataset attributes', async () => {
 		document.body.innerHTML = `
-			<a href="#" data-type="custom" data-device-id="device" data-command="menu">M</a>
-			<a href="#" data-type="tv" data-device-id="device" data-command="1">1</a>
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="menu">M</button>
+			<button type="button" class="control" data-type="tv" data-device-id="device" data-command="1">1</button>
 		`;
 
 		init(document);
 
-		const link = document.querySelector('a[data-command="menu"]');
+		const link = document.querySelector('.control[data-command="menu"]');
 		const event = new MouseEvent('click', { bubbles: true, cancelable: true });
 		const preventDefaultSpy = jest.spyOn(event, 'preventDefault');
 		link.dispatchEvent(event);
@@ -88,9 +89,202 @@ describe('init', () => {
 		expect(console.log).toHaveBeenCalledWith('Success:', 'ok');
 	});
 
+	it('repeats requests while pointer is held down', () => {
+		jest.useFakeTimers();
+		document.body.innerHTML = `
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="up">↑</button>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('.control[data-command="up"]');
+		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+		const upEvent = new MouseEvent('pointerup', { bubbles: true, cancelable: true });
+
+		link.dispatchEvent(downEvent);
+		expect(fetch).toHaveBeenCalledTimes(1);
+
+		jest.advanceTimersByTime(450);
+		expect(fetch).toHaveBeenCalledTimes(3);
+
+		link.dispatchEvent(upEvent);
+		jest.advanceTimersByTime(400);
+		expect(fetch).toHaveBeenCalledTimes(3);
+	});
+
+	it('does not start repeat twice for the same link', () => {
+		jest.useFakeTimers();
+		document.body.innerHTML = `
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="right">→</button>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('.control[data-command="right"]');
+		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+
+		link.dispatchEvent(downEvent);
+		link.dispatchEvent(downEvent);
+
+		expect(fetch).toHaveBeenCalledTimes(1);
+
+		jest.advanceTimersByTime(250);
+		expect(fetch).toHaveBeenCalledTimes(2);
+	});
+
+	it('ignores stop events when no repeat is active', () => {
+		document.body.innerHTML = `
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="left">←</button>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('.control[data-command="left"]');
+		const upEvent = new MouseEvent('pointerup', { bubbles: true, cancelable: true });
+
+		link.dispatchEvent(upEvent);
+
+		expect(fetch).not.toHaveBeenCalled();
+	});
+
+	it('stops repeating on pointerleave and pointercancel', () => {
+		jest.useFakeTimers();
+		document.body.innerHTML = `
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="down">↓</button>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('.control[data-command="down"]');
+		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+		const leaveEvent = new MouseEvent('pointerleave', { bubbles: true, cancelable: true });
+
+		link.dispatchEvent(downEvent);
+		jest.advanceTimersByTime(250);
+		expect(fetch).toHaveBeenCalledTimes(2);
+
+		link.dispatchEvent(leaveEvent);
+		jest.advanceTimersByTime(400);
+		expect(fetch).toHaveBeenCalledTimes(2);
+
+		const cancelEvent = new Event('pointercancel', { bubbles: true, cancelable: true });
+		link.dispatchEvent(downEvent);
+		jest.advanceTimersByTime(200);
+		expect(fetch).toHaveBeenCalledTimes(4);
+
+		link.dispatchEvent(cancelEvent);
+		jest.advanceTimersByTime(400);
+		expect(fetch).toHaveBeenCalledTimes(4);
+	});
+
+	it('does not repeat on non-arrow links', () => {
+		jest.useFakeTimers();
+		document.body.innerHTML = `
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="4">4</button>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('.control[data-command="4"]');
+		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+		link.dispatchEvent(downEvent);
+
+		jest.advanceTimersByTime(400);
+		expect(fetch).not.toHaveBeenCalled();
+	});
+
+	it('suppresses click right after pointer hold then allows later clicks', async () => {
+		document.body.innerHTML = `
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="right">→</button>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('.control[data-command="right"]');
+		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+		const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+		link.dispatchEvent(downEvent);
+		link.dispatchEvent(clickEvent);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+
+		expect(fetch).toHaveBeenCalledTimes(1);
+
+		link.dispatchEvent(clickEvent);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+
+		expect(fetch).toHaveBeenCalledTimes(2);
+	});
+
+	it('still allows click on non-arrow links after pointerdown', async () => {
+		document.body.innerHTML = `
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="4">4</button>
+		`;
+
+		init(document);
+
+		const link = document.querySelector('.control[data-command="4"]');
+		const downEvent = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+		const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+		link.dispatchEvent(downEvent);
+		link.dispatchEvent(clickEvent);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+
+		expect(fetch).toHaveBeenCalledTimes(1);
+	});
+
 	it('returns early when root is missing querySelectorAll', () => {
 		const root = {};
 		init(root);
 		expect(fetch).not.toHaveBeenCalled();
+	});
+
+	it('uses document by default when no root is provided', async () => {
+		document.body.innerHTML = `
+			<button type="button" class="control" data-type="custom" data-device-id="device" data-command="menu">M</button>
+		`;
+
+		init();
+
+		const link = document.querySelector('.control[data-command="menu"]');
+		const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+		link.dispatchEvent(event);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+
+		expect(fetch).toHaveBeenCalledWith(
+			'http://a.ze.gs/switchbot-custom/-d/device/-c/menu'
+		);
+	});
+
+	it('registers and runs the DOMContentLoaded handler when window is available', () => {
+		const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
+
+		jest.resetModules();
+		jest.isolateModules(() => {
+			require('../src/app');
+		});
+
+		const domReadyCall = addEventListenerSpy.mock.calls.find(
+			([eventName]) => eventName === 'DOMContentLoaded'
+		);
+
+		expect(domReadyCall).toBeDefined();
+		const [, handler] = domReadyCall;
+		handler();
+
+		addEventListenerSpy.mockRestore();
+	});
+
+	it('skips window registration when window is undefined', () => {
+		const originalWindow = global.window;
+		delete global.window;
+
+		jest.resetModules();
+		jest.isolateModules(() => {
+			require('../src/app');
+		});
+
+		global.window = originalWindow;
 	});
 });
