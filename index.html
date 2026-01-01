@@ -148,8 +148,7 @@ const api = (type, deviceId, command) =>
 			throw error;
 		});
 
-const repeatIntervalMs = 200;
-const repeatableCommands = new Set(['up', 'down', 'left', 'right']);
+const repeatableCommands = { up: 1, down: 1, left: 1, right: 1 };
 
 const init = (root = document) => {
 	if (!root?.querySelectorAll) {
@@ -163,11 +162,11 @@ const init = (root = document) => {
 	const startRepeat = (link) => {
 		if (activeIntervals.has(link)) return;
 		const { type, deviceId, command } = link.dataset;
-		if (!repeatableCommands.has(command)) return;
+		if (!repeatableCommands[command]) return;
 		const send = () => api(type, deviceId, command);
 		send();
 		suppressClick.add(link);
-		activeIntervals.set(link, setInterval(send, repeatIntervalMs));
+		activeIntervals.set(link, setInterval(send, 200));
 	};
 
 	const stopRepeat = (link) => {
@@ -178,17 +177,13 @@ const init = (root = document) => {
 	};
 
 	links.forEach((link) => {
-		const stopHandler = (event) => {
-			event.preventDefault();
-			stopRepeat(event.currentTarget);
-		};
-		link.addEventListener('pointerdown', (event) => {
-			event.preventDefault();
-			startRepeat(event.currentTarget);
-		});
-		['pointerup', 'pointerleave', 'pointercancel'].forEach((name) => {
+		const stopHandler = (event) => (event.preventDefault(), stopRepeat(event.currentTarget));
+		link.addEventListener('pointerdown', (event) =>
+			(event.preventDefault(), startRepeat(event.currentTarget))
+		);
+		for (const name of ['pointerup', 'pointerleave', 'pointercancel']) {
 			link.addEventListener(name, stopHandler);
-		});
+		}
 		link.addEventListener('click', (event) => {
 			event.preventDefault();
 			const currentTarget = event.currentTarget;
