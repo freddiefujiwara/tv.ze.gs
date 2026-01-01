@@ -173,10 +173,13 @@ const init = (root = document) => {
 		timers.delete(el);
 	};
 	els.forEach((el) => {
+		const { command } = el.dataset;
 		const stopHandler = on(stop);
-		el.addEventListener('pointerdown', on(start));
-		for (const name of ['pointerup', 'pointerleave', 'pointercancel']) {
-			el.addEventListener(name, stopHandler);
+		if (repeatableCommands[command]) {
+			el.addEventListener('pointerdown', on(start));
+			for (const name of ['pointerup', 'pointerleave', 'pointercancel']) {
+				el.addEventListener(name, stopHandler);
+			}
 		}
 		el.addEventListener('click', (e) => {
 			e.preventDefault();
