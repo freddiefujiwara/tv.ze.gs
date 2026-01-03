@@ -14,7 +14,8 @@
   "jest": {
     "testEnvironment": "jsdom",
     "collectCoverageFrom": [
-      "src/app.js"
+      "src/app.js",
+      "build.js"
     ]
   }
 }
