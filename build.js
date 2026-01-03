@@ -9,6 +9,31 @@ const readAsset = async (assetPath) => {
 	return data.trim();
 };
 
+const injectFallbackLinks = (html) =>
+	html.replace(/<a([^>]*?)\s+href="#"([^>]*?)>/g, (match, before, after) => {
+		const attrs = `${before} ${after}`;
+		const type = attrs.match(/data-type="([^"]+)"/)?.[1];
+		const deviceId = attrs.match(/data-device-id="([^"]+)"/)?.[1];
+		const command = attrs.match(/data-command="([^"]+)"/)?.[1];
+		if (!type || !deviceId || !command) return match;
+		const href = `http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}?url=http://tv.ze.gs`;
+		return `<a${before} href="${href}"${after}>`;
+	});
+
+const buildHtml = (html, styles, script) => {
+	const withStyles = html.replace(
+		/<link\s+rel="stylesheet"\s+href="\.\/styles\.css">/,
+		`<style>\n${styles}\n</style>`
+	);
+
+	const withScript = withStyles.replace(
+		/<script\s+src="\.\/app\.js"><\/script>/,
+		`<script>\n${script}\n</script>`
+	);
+
+	return injectFallbackLinks(withScript);
+};
+
 const inlineAssets = async () => {
 	const indexPath = path.join(SRC_DIR, 'index.html');
 	const stylesPath = path.join(SRC_DIR, 'styles.css');
@@ -20,15 +45,7 @@ const inlineAssets = async () => {
 		readAsset(scriptPath),
 	]);
 
-	const withStyles = html.replace(
-		/<link\s+rel="stylesheet"\s+href="\.\/styles\.css">/,
-		`<style>\n${styles}\n</style>`
-	);
-
-	return withStyles.replace(
-		/<script\s+src="\.\/app\.js"><\/script>/,
-		`<script>\n${script}\n</script>`
-	);
+	return buildHtml(html, styles, script);
 };
 
 const build = async () => {
@@ -40,7 +57,20 @@ const build = async () => {
 	console.log('Build complete.');
 };
 
-build().catch((error) => {
-	console.error('Build failed:', error);
-	process.exit(1);
-});
+/* istanbul ignore next */
+if (require.main === module) {
+	build().catch((error) => {
+		console.error('Build failed:', error);
+		process.exit(1);
+	});
+}
+
+/* istanbul ignore next */
+if (typeof module !== 'undefined') {
+	module.exports = {
+		build,
+		buildHtml,
+		injectFallbackLinks,
+		inlineAssets,
+	};
+}
