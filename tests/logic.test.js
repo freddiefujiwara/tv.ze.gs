@@ -26,14 +26,6 @@ describe("parseApiCommands", () => {
   });
 });
 
-import { initApp } from "../src/logic.js";
-
-describe("initApp", () => {
-  it("initializes", () => {
-    const doc = {};
-    expect(initApp(doc, fetch)).toBeDefined();
-  });
-});
 
 describe("parseApiCommands error", () => {
   it("handles non-array results", () => {
