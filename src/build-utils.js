@@ -1,4 +1,4 @@
-import { apiUrl, buildCarArrivalArgs, buildStatusUrl, parseApiCommands, replaceHostTokens } from "./logic.js";
+import { apiUrl, parseApiCommands, replaceHostTokens } from "./logic.js";
 
 /**
  * @param {string} attrs
@@ -37,8 +37,6 @@ const rewriteLinksForNoJs = (html, { allowedPrefix = "http://a.ze.gs/" } = {}) =
     }
 
     const dataApi = parseDataAttribute(attrs, "data-api");
-    const dataStatusAction = parseDataAttribute(attrs, "data-status-action");
-    const dataMessageKey = parseDataAttribute(attrs, "data-message-key");
 
     let href = null;
     if (dataApi) {
@@ -52,10 +50,6 @@ const rewriteLinksForNoJs = (html, { allowedPrefix = "http://a.ze.gs/" } = {}) =
         console.error("Failed to parse data-api payload", error);
         href = null;
       }
-    } else if (dataMessageKey === "car-arrival") {
-      href = apiUrl(buildCarArrivalArgs());
-    } else if (dataStatusAction) {
-      href = buildStatusUrl({ s: "status", t: dataStatusAction });
     }
 
     if (!href || !href.startsWith(allowedPrefix)) {

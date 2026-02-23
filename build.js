@@ -28,22 +28,16 @@ const inlineAssets = (html, { css, script }) => {
 };
 
 const build = async () => {
-  const [html, css, text, constants, hosts, notify, alarm, status, voice, youtube, logic, app] = await Promise.all([
+  const [html, css, constants, hosts, logic, app] = await Promise.all([
     readFile(join(srcDir, "index.html"), "utf8"),
     readFile(join(srcDir, "styles.css"), "utf8"),
-    readFile(join(srcDir, "text.js"), "utf8"),
     readFile(join(srcDir, "constants.js"), "utf8"),
     readFile(join(srcDir, "hosts.js"), "utf8"),
-    readFile(join(srcDir, "notify.js"), "utf8"),
-    readFile(join(srcDir, "alarm.js"), "utf8"),
-    readFile(join(srcDir, "status.js"), "utf8"),
-    readFile(join(srcDir, "voice.js"), "utf8"),
-    readFile(join(srcDir, "youtube.js"), "utf8"),
     readFile(join(srcDir, "logic.js"), "utf8"),
     readFile(join(srcDir, "app.js"), "utf8"),
   ]);
 
-  const modules = [text, constants, hosts, notify, alarm, status, voice, youtube, logic, app];
+  const modules = [constants, hosts, logic, app];
   const bundle = modules.map((code) => stripExports(stripImports(code)).trim()).join("\n\n");
   const noJsHtml = applyHtmlTransforms(html, [rewriteLinksForNoJs]);
   const inlined = inlineAssets(noJsHtml, { css: css.trim(), script: bundle });

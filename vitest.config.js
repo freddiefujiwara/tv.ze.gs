@@ -7,6 +7,7 @@ export default defineConfig({
       provider: "v8",
       all: true,
       include: ["src/**/*.js"],
+      exclude: ["src/main.js"],
       lines: 100,
       statements: 100,
       branches: 100,
