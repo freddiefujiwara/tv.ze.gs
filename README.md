@@ -1,35 +1,58 @@
 # tv.ze.gs
 
-This is a small web page to control a TV through SwitchBot.
-The page has a simple table of buttons.
+This is a small web app for home control.
+It uses Vue 3 and Vite.
+Build output is one file: `dist/index.html`.
 
-## Files
+## Tech stack
+- Vue 3 (Composition API)
+- Vite
+- vite-plugin-singlefile
+- Vitest with jsdom
+- JavaScript (no TypeScript)
 
-- `src/index.html` : the HTML page
-- `src/styles.css` : the styles
-- `src/app.js` : the JavaScript logic
-- `test/app.test.js` : unit tests for the JavaScript
-- `build.js` : builds one `dist/index.html` with inlined CSS and JS
+## Main files
+- `index.html`: Vite entry
+- `src/main.js`: starts Vue
+- `src/App.vue`: UI template
+- `src/*.js`: app logic modules
+- `src/styles.css`: styles
+- `vite.config.js`: Vite config
+- `tests/*.test.js`: unit tests
 
-## How to use
-
-Open `src/index.html` in a browser, or build and use `dist/index.html`.
-
-## Build
-
+## Install
 ```bash
 npm install
-npm run build
 ```
 
-The build creates `dist/index.html`.
-
 ## Test
-
 ```bash
 npm test
 ```
 
-## Deploy
+## Build
+```bash
+npm run build
+```
 
-GitHub Actions deploys `dist/index.html` to GitHub Pages on `main`.
+Output:
+- `dist/index.html` (CSS and JS are inlined)
+
+## Migration steps
+1. Move old HTML UI from `src/index.html` to `src/App.vue`.
+2. Keep existing DOM logic in `src/*.js`.
+3. Mount Vue from `src/main.js`.
+4. Run build with `vite build`.
+5. Keep all old `id` and `data-*` attributes for compatibility.
+
+## Notes
+- If you use images/files, inline them if you want one true single HTML file.
+- Avoid dynamic imports for single-file output.
+- External API URLs are not inlined.
+
+## Deploy
+CI should run:
+- `npm test`
+- `npm run build`
+
+Then deploy `dist/`.
