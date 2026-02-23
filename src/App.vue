@@ -6,12 +6,6 @@
 
     <div class="table-wrap">
       <table class="stack-table">
-        <thead>
-          <tr>
-            <th>Device</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
         <tbody>
           <!-- TV Remote Buttons (Original Behavior) -->
           <tr class="compact">
