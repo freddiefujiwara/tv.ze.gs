@@ -1,4 +1,4 @@
-# ha.ze.gs
+# tv.ze.gs
 
 This is a small web app for home control.
 It uses Vue 3 and Vite.

@@ -13,6 +13,25 @@
         <h1>tv.ze.gs</h1>
       </header>
 
+      <div class="card-grid">
+        <article class="card">
+          <h2>Status</h2>
+          <p id="AirCondition">AirCondition</p>
+        </article>
+        <article class="card">
+          <h2>Date</h2>
+          <p id="Date">&nbsp;</p>
+        </article>
+        <article class="card">
+          <h2>Temperature</h2>
+          <p id="Temperature">&nbsp;</p>
+        </article>
+        <article class="card">
+          <h2>Humidity</h2>
+          <p id="Humid">&nbsp;</p>
+        </article>
+      </div>
+
       <div class="table-wrap">
         <table class="stack-table">
           <tbody>
@@ -87,11 +106,13 @@
               <td data-label="Device">Nav</td>
               <td data-label="Actions">
                 <div class="control-group">
-                  <a href="#" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "up"]'>↑</a>
-                  <a href="#" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "down"]'>↓</a>
-                  <a href="#" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "left"]'>←</a>
-                  <a href="#" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "right"]'>→</a>
-                  <a href="#" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "ok"]'>OK</a>
+                  <div class="d-pad">
+                    <a href="#" style="grid-area: up" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "up"]'>↑</a>
+                    <a href="#" style="grid-area: left" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "left"]'>←</a>
+                    <a href="#" style="grid-area: ok" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "ok"]'>OK</a>
+                    <a href="#" style="grid-area: right" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "right"]'>→</a>
+                    <a href="#" style="grid-area: down" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "down"]'>↓</a>
+                  </div>
                   <a href="#" data-api='["switchbot-custom", "-d", "02-202111271132-47468800", "-c", "back"]'>B</a>
                 </div>
               </td>
@@ -107,10 +128,6 @@
                 <a id="speak" href="#"></a>
                 <a id="speak_tatami" href="#"></a>
                 <a id="set" href="#"></a>
-                <div id="AirCondition"></div>
-                <div id="Date"></div>
-                <div id="Temperature"></div>
-                <div id="Humid"></div>
               </td>
             </tr>
           </tbody>

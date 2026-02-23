@@ -330,3 +330,25 @@ input:focus {
 .toast.show {
   opacity: 1;
 }
+
+.d-pad {
+  display: grid;
+  grid-template-areas:
+    ". up ."
+    "left ok right"
+    ". down .";
+  gap: 8px;
+  justify-items: center;
+  align-items: center;
+  width: max-content;
+  margin: 8px 0;
+}
+
+.d-pad a {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 !important;
+}
