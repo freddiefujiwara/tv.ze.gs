@@ -1,76 +1,58 @@
-const fs = require('fs/promises');
-const path = require('path');
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { applyHtmlTransforms, rewriteLinksForNoJs } from "./src/build-utils.js";
 
-const SRC_DIR = path.join(__dirname, 'src');
-const DIST_DIR = path.join(__dirname, 'dist');
+const rootDir = dirname(fileURLToPath(import.meta.url));
+const srcDir = join(rootDir, "src");
+const distDir = join(rootDir, "dist");
 
-const readAsset = async (assetPath) => {
-	const data = await fs.readFile(assetPath, 'utf8');
-	return data.trim();
-};
+const stripExports = (code) =>
+  code
+    .replace(/\bexport\s+(const|function|class)\s+/g, "$1 ")
+    .replace(/^\s*export\s+\{[^}]*\};?\s*$/gm, "");
+const stripImports = (code) => code.replace(/\s*import\s+[^;]+;\s*/g, "");
 
-const injectFallbackLinks = (html) =>
-	html.replace(/<a([^>]*?)\s+href="#"([^>]*?)>/g, (match, before, after) => {
-		const attrs = `${before} ${after}`;
-		const type = attrs.match(/data-type="([^"]+)"/)?.[1];
-		const deviceId = attrs.match(/data-device-id="([^"]+)"/)?.[1];
-		const command = attrs.match(/data-command="([^"]+)"/)?.[1];
-		if (!type || !deviceId || !command) return match;
-		const href = `http://a.ze.gs/switchbot-${type}/-d/${deviceId}/-c/${command}?url=http://tv.ze.gs`;
-		return `<a${before} href="${href}"${after}>`;
-	});
+const inlineAssets = (html, { css, script }) => {
+  let output = html.replace(
+    /<link\s+rel="stylesheet"\s+href="\.\/styles\.css"\s*\/>/i,
+    `<style>${css}</style>`,
+  );
 
-const buildHtml = (html, styles, script) => {
-	const withStyles = html.replace(
-		/<link\s+rel="stylesheet"\s+href="\.\/styles\.css">/,
-		`<style>\n${styles}\n</style>`
-	);
+  output = output.replace(
+    /<script\s+type="module"\s+src="\.\/app\.js"\s*><\/script>/i,
+    `<script>${script}</script>`,
+  );
 
-	const withScript = withStyles.replace(
-		/<script\s+src="\.\/app\.js"><\/script>/,
-		`<script>\n${script}\n</script>`
-	);
-
-	return injectFallbackLinks(withScript);
-};
-
-const inlineAssets = async () => {
-	const indexPath = path.join(SRC_DIR, 'index.html');
-	const stylesPath = path.join(SRC_DIR, 'styles.css');
-	const scriptPath = path.join(SRC_DIR, 'app.js');
-
-	const [html, styles, script] = await Promise.all([
-		readAsset(indexPath),
-		readAsset(stylesPath),
-		readAsset(scriptPath),
-	]);
-
-	return buildHtml(html, styles, script);
+  return output;
 };
 
 const build = async () => {
-	await fs.rm(DIST_DIR, { recursive: true, force: true });
-	await fs.mkdir(DIST_DIR, { recursive: true });
+  const [html, css, text, constants, hosts, notify, alarm, status, voice, youtube, logic, app] = await Promise.all([
+    readFile(join(srcDir, "index.html"), "utf8"),
+    readFile(join(srcDir, "styles.css"), "utf8"),
+    readFile(join(srcDir, "text.js"), "utf8"),
+    readFile(join(srcDir, "constants.js"), "utf8"),
+    readFile(join(srcDir, "hosts.js"), "utf8"),
+    readFile(join(srcDir, "notify.js"), "utf8"),
+    readFile(join(srcDir, "alarm.js"), "utf8"),
+    readFile(join(srcDir, "status.js"), "utf8"),
+    readFile(join(srcDir, "voice.js"), "utf8"),
+    readFile(join(srcDir, "youtube.js"), "utf8"),
+    readFile(join(srcDir, "logic.js"), "utf8"),
+    readFile(join(srcDir, "app.js"), "utf8"),
+  ]);
 
-	const bundledHtml = await inlineAssets();
-	await fs.writeFile(path.join(DIST_DIR, 'index.html'), bundledHtml);
-	console.log('Build complete.');
+  const modules = [text, constants, hosts, notify, alarm, status, voice, youtube, logic, app];
+  const bundle = modules.map((code) => stripExports(stripImports(code)).trim()).join("\n\n");
+  const noJsHtml = applyHtmlTransforms(html, [rewriteLinksForNoJs]);
+  const inlined = inlineAssets(noJsHtml, { css: css.trim(), script: bundle });
+
+  await rm(distDir, { recursive: true, force: true });
+  await mkdir(distDir, { recursive: true });
+  await writeFile(join(distDir, "index.html"), inlined);
 };
 
-/* istanbul ignore next */
-if (require.main === module) {
-	build().catch((error) => {
-		console.error('Build failed:', error);
-		process.exit(1);
-	});
-}
+export { build as main };
 
-/* istanbul ignore next */
-if (typeof module !== 'undefined') {
-	module.exports = {
-		build,
-		buildHtml,
-		injectFallbackLinks,
-		inlineAssets,
-	};
-}
+build();
