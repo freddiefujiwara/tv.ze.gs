@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES } from "./constants.js";
-import { apiUrl, replaceHostTokens, resolveHost } from "./hosts.js";
+import { apiUrl, replaceHostTokens } from "./hosts.js";
 
 /**
  * @param {string} value
@@ -27,18 +27,5 @@ export {
   apiUrl,
   parseApiCommands,
   replaceHostTokens,
-  resolveHost,
 };
 
-/**
- * @param {Document} doc
- * @param {typeof fetch} [fetcher]
- * @returns {{
- *   elements: Record<string, HTMLElement | null>
- * } | null}
- */
-export const initApp = (doc, fetcher = fetch) => {
-  return {
-    elements: {},
-  };
-};

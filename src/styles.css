@@ -63,46 +63,6 @@ body {
   font-size: clamp(1.25rem, 2.8vw, 1.75rem);
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.header-buttons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.btn-pill {
-  border: 1px solid var(--border);
-  background: var(--surface-elevated);
-  color: var(--text);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font: inherit;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-pill:hover {
-  border-color: var(--link);
-  background: var(--surface);
-}
-
-.btn-pill:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-
 .table-wrap {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -155,31 +115,10 @@ th {
   color: var(--link-active);
 }
 
-.meta {
-  color: var(--muted);
-  font-size: 0.85em;
-}
-
-.error {
-  color: var(--error);
-  font-size: 12px;
-  margin-top: 4px;
-}
-
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .header-actions {
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-
-  .header-buttons {
-    width: 100%;
-    justify-content: flex-start;
   }
 
   .stack-table {
@@ -249,33 +188,6 @@ th {
     content: none !important;
   }
 }
-
-textarea,
-select,
-input {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--surface-elevated);
-  color: var(--text);
-  font: inherit;
-  width: auto;
-  min-width: 120px;
-}
-
-textarea {
-  min-width: 200px;
-  height: 40px;
-  resize: vertical;
-}
-
-textarea:focus,
-select:focus,
-input:focus {
-  outline: none;
-  border-color: var(--link);
-}
-
 
 .d-pad {
   display: grid;

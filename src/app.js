@@ -1,7 +1,6 @@
 import { DATA_API_DELAY_MS, ERROR_MESSAGES } from "./constants.js";
 import {
   apiUrl,
-  initApp,
   parseApiCommands,
   replaceHostTokens,
 } from "./logic.js";
@@ -11,7 +10,7 @@ import {
  * @param {string} selector
  * @param {(link: HTMLAnchorElement) => Promise<void>} handler
  */
-export const bindLinkClicks = (doc, selector, handler) => {
+const bindLinkClicks = (doc, selector, handler) => {
   doc.querySelectorAll(selector).forEach((link) =>
     link.addEventListener("click", async (event) => {
       event.preventDefault();
@@ -47,18 +46,12 @@ export const wireEvents = (doc, fetcher) => {
 /**
  * @param {Document} [doc]
  * @param {typeof fetch} [fetcher]
- * @returns {ReturnType<typeof initApp> | null}
  */
 export const start = (doc = document, fetcher = fetch) => {
-  const instance = initApp(doc, fetcher);
-  if (!instance) return null;
   doc.querySelectorAll("a").forEach((link) => link.setAttribute("href", "#"));
   wireEvents(doc, fetcher);
-  return instance;
 };
 
 export const bootstrapBrowser = (doc = document, fetcher = fetch) => {
-  if (typeof window === "undefined") return null;
-  const instance = start(doc, fetcher);
-  return instance;
+  start(doc, fetcher);
 };
