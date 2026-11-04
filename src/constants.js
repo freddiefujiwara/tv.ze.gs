@@ -1,5 +1,5 @@
 export const DATA_API_DELAY_MS = 200;
-export const API_BASE_URL = "http://a.ze.gs";
+export const API_BASE_URL = "https://a.ze.gs";
 
 export const DEVICE_HOSTS = {
   nest: "192.168.1.22",
