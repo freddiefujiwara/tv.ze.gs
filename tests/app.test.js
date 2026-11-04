@@ -28,7 +28,7 @@ describe("app wiring", () => {
     link.dispatchEvent(new Event("click", { bubbles: true }));
     await flushPromises();
 
-    expect(fetcher).toHaveBeenCalledWith("http://a.ze.gs/switchbot-command/-d/ID/-c/turnOn");
+    expect(fetcher).toHaveBeenCalledWith("https://a.ze.gs/switchbot-command/-d/ID/-c/turnOn");
   });
 
   it("handles multiple commands with delay", async () => {
