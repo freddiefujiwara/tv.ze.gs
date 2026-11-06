@@ -9,7 +9,7 @@ export const minOptions = buildOptions(60);
 
 export const buildAppDocument = ({ extraHtml = "", includeYoutubeLink = true } = {}) => {
   const document = window.document.implementation.createHTMLDocument("test");
-  const youtubeLink = includeYoutubeLink ? `<a href="#" data-youtube-host="192.168.1.22">YT</a>` : "";
+  const youtubeLink = includeYoutubeLink ? `<a href="#" data-youtube-host="192.0.2.10">YT</a>` : "";
   document.body.innerHTML = `
     <textarea id="voicetext"></textarea>
     <a id="speak" href="#">Nest Wifi</a>
