@@ -4,6 +4,7 @@ import {
   parseApiCommands,
   replaceHostTokens,
 } from "./logic.js";
+import { bindTokenSettings, withApiToken } from "./token.js";
 
 /**
  * @param {Document} doc
@@ -53,5 +54,6 @@ export const start = (doc = document, fetcher = fetch) => {
 };
 
 export const bootstrapBrowser = (doc = document, fetcher = fetch) => {
-  start(doc, fetcher);
+  start(doc, withApiToken(fetcher));
+  bindTokenSettings(doc);
 };
