@@ -1,11 +1,10 @@
 export const DATA_API_DELAY_MS = 200;
-export const API_BASE_URL = "https://a.ze.gs";
+import { CONFIG } from "./config.js";
 
-export const DEVICE_HOSTS = {
-  nest: "192.168.1.22",
-  tatami: "192.168.1.236",
-  tv: "192.168.1.219",
-};
+// The home server base URL and the device LAN addresses are build-time
+// configuration (see config.js); they are not written in this repository.
+export const API_BASE_URL = CONFIG.API_BASE_URL;
+export const DEVICE_HOSTS = CONFIG.DEVICE_HOSTS;
 
 export const ERROR_MESSAGES = {
   EXEC_COMMANDS: "Failed to execute data-api commands",
