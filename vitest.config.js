@@ -8,10 +8,12 @@ export default defineConfig({
       all: true,
       include: ["src/**/*.js"],
       exclude: ["src/main.js"],
-      lines: 100,
-      statements: 100,
-      branches: 100,
-      functions: 100,
+      thresholds: {
+        lines: 100,
+        statements: 100,
+        branches: 100,
+        functions: 100,
+      },
     },
   },
 });
