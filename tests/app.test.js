@@ -31,6 +31,19 @@ describe("app wiring", () => {
     expect(fetcher).toHaveBeenCalledWith("https://home.example/switchbot-command/-d/ID/-c/turnOn");
   });
 
+  it("ignores clicks on api links with an empty command", async () => {
+    const document = buildAppDocument();
+    const link = document.createElement("a");
+    link.setAttribute("data-api", "");
+    document.body.appendChild(link);
+
+    wireEvents(document, fetcher);
+    link.dispatchEvent(new Event("click", { bubbles: true }));
+    await flushPromises();
+
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
   it("handles multiple commands with delay", async () => {
     vi.useFakeTimers();
     const document = buildAppDocument();
