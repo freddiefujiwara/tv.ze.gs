@@ -5,6 +5,7 @@ import { CONFIG } from "./config.js";
 // configuration (see config.js); they are not written in this repository.
 export const API_BASE_URL = CONFIG.API_BASE_URL;
 export const DEVICE_HOSTS = CONFIG.DEVICE_HOSTS;
+export const SWITCHBOT_DEVICES = CONFIG.SWITCHBOT_DEVICES;
 
 export const ERROR_MESSAGES = {
   EXEC_COMMANDS: "Failed to execute data-api commands",

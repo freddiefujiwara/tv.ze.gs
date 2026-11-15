@@ -30,14 +30,17 @@ describe("buildConfig", () => {
     const config = buildConfig({
       VITE_API_BASE_URL: "https://home.example",
       VITE_DEVICE_HOSTS: '{"nest":"192.0.2.10","tatami":"192.0.2.11","tv":"192.0.2.12"}',
+      VITE_SWITCHBOT_DEVICES: '{"tv":"TVID"}',
     });
     expect(config.API_BASE_URL).toBe("https://home.example");
     expect(config.DEVICE_HOSTS).toEqual({ nest: "192.0.2.10", tatami: "192.0.2.11", tv: "192.0.2.12" });
+    expect(config.SWITCHBOT_DEVICES).toEqual({ tv: "TVID" });
   });
 
   it("falls back to empty values when the variables are not set", () => {
     const config = buildConfig({});
     expect(config.API_BASE_URL).toBe("");
     expect(config.DEVICE_HOSTS).toEqual({});
+    expect(config.SWITCHBOT_DEVICES).toEqual({});
   });
 });
